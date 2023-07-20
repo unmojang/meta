@@ -1,7 +1,7 @@
 export UPSTREAM_DIR=upstream
-export UPSTREAM_REPO=git@github.com:unmojang/meta-upstream.git
+export UPSTREAM_REPO=https://github.com/unmojang/meta-upstream.git
 export LAUNCHER_DIR=launcher
-export LAUNCHER_REPO=git@github.com:unmojang/meta-launcher.git
+export LAUNCHER_REPO=https://github.com/unmojang/meta-launcher.git
 export BRANCH_master=master
 export BRANCH_develop=develop
 export DEPLOY_TO_GIT=true
