@@ -288,7 +288,7 @@ class MojangLibrary(MetaBase):
 
 class Library(MojangLibrary):
     url: Optional[str]
-    absoluteUrl: Optional[str]
+    absoluteUrl: Optional[str] = Field(None, alias="MMC-absoluteUrl")
     mmcHint: Optional[str] = Field(None, alias="MMC-hint")
 
 

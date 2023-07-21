@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 
@@ -39,7 +40,10 @@ def main():
                     latest_version = version
 
                 v = MetaVersion(
-                    name="authlib-injector", uid=AGENT_COMPONENT, version=version
+                    name="authlib-injector",
+                    uid=AGENT_COMPONENT,
+                    version=version,
+                    release_time=datetime.datetime.now(),
                 )
                 v.type = "release"
                 v.additional_agents = [
