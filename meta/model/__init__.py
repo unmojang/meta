@@ -288,6 +288,7 @@ class MojangLibrary(MetaBase):
 
 class Library(MojangLibrary):
     url: Optional[str]
+    absoluteUrl: Optional[str]
     mmcHint: Optional[str] = Field(None, alias="MMC-hint")
 
 
@@ -295,6 +296,10 @@ class Dependency(MetaBase):
     uid: str
     equals: Optional[str]
     suggests: Optional[str]
+
+
+class Agent(Library):
+    argument: Optional[str]
 
 
 class MetaVersion(Versioned):
@@ -319,6 +324,7 @@ class MetaVersion(Versioned):
     additional_traits: Optional[List[str]] = Field(alias="+traits")
     additional_tweakers: Optional[List[str]] = Field(alias="+tweakers")
     additional_jvm_args: Optional[List[str]] = Field(alias="+jvmArgs")
+    additional_agents: Optional[List[Agent]] = Field(alias="+agents")
 
 
 class MetaPackage(Versioned):

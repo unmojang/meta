@@ -43,6 +43,7 @@ currentDate=$(date -I)
 upstream_git reset --hard HEAD || exit 1
 upstream_git checkout "${BRANCH}" || exit 1
 
+python updateAuthlibInjector.py || fail_in
 python updateMojang.py || fail_in
 python updateForge.py || fail_in
 python updateFabric.py || fail_in
@@ -64,6 +65,7 @@ fi
 launcher_git reset --hard HEAD || exit 1
 launcher_git checkout "${BRANCH}" || exit 1
 
+python generateAuthlibInjector.py || fail_out
 python generateMojang.py || fail_out
 python generateForge.py || fail_out
 python generateFabric.py || fail_out
