@@ -43,7 +43,7 @@ def main():
                     name="authlib-injector",
                     uid=AGENT_COMPONENT,
                     version=version,
-                    release_time=datetime.datetime.now(),
+                    release_time=datetime.datetime.fromtimestamp(0),
                 )
                 v.type = "release"
                 v.additional_agents = [
