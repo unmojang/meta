@@ -58,6 +58,7 @@ if [ "${DEPLOY_TO_GIT}" = true ] ; then
     upstream_git add fabric/loader-installer-json/*.json fabric/meta-v2/*.json fabric/jars/*.json || fail_in
     upstream_git add quilt/loader-installer-json/*.json quilt/meta-v3/*.json quilt/jars/*.json || fail_in
     upstream_git add liteloader/*.json || fail_in
+    upstream_git add authlib-injector/artifacts/*.json || fail_in
     if ! upstream_git diff --cached --exit-code ; then
         upstream_git commit -a -m "Update ${currentDate}" || fail_in
         upstream_git push || exit 1
@@ -83,6 +84,7 @@ if [ "${DEPLOY_TO_GIT}" = true ] ; then
     launcher_git add net.fabricmc.fabric-loader/* net.fabricmc.intermediary/* || fail_out
     launcher_git add org.quiltmc.quilt-loader/* || fail_out  # TODO: add Quilt hashed, once it is actually used
     launcher_git add com.mumfrey.liteloader/* || fail_out
+    launcher_git add moe.yushi.authlibinjector/* || fail_out
 
     if ! launcher_git diff --cached --exit-code ; then
         launcher_git commit -a -m "Update ${currentDate}" || fail_out
