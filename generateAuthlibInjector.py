@@ -33,17 +33,24 @@ def main():
                 encoding="utf-8",
             ) as artifact_file:
                 artifact = json.load(artifact_file)
+
+                if "release_time" not in artifact:
+                    # Don't include versions of authlib-injector that don't have a release_time. Adding release times to old versions would be done by https://github.com/yushijinhun/authlib-injector.yushi.moe/pull/1.
+                    continue
+
                 version = artifact["version"]
 
                 latest_build = max(latest_build, build_number)
                 if latest_build == build_number:
                     latest_version = version
 
+                release_time = datetime.datetime.fromisoformat(artifact["release_time"])
+
                 v = MetaVersion(
                     name="authlib-injector",
                     uid=AGENT_COMPONENT,
                     version=version,
-                    release_time=datetime.datetime.fromtimestamp(0),
+                    release_time=release_time,
                 )
                 v.type = "release"
                 v.additional_agents = [
