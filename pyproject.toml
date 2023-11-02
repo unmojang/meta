@@ -11,6 +11,7 @@ cachecontrol = "^0.13.1"
 pydantic = "^1.10.4"
 hatchling = "^1.18.0"
 filelock = "^3.12.2"
+python-dateutil = "^2.8.2"
 
 [build-system]
 requires = ["poetry-core"]

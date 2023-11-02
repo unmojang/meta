@@ -1,6 +1,7 @@
-import datetime
 import json
 import os
+
+import dateutil.parser
 
 from meta.common import (
     ensure_component_dir,
@@ -44,7 +45,7 @@ def main():
                 if latest_build == build_number:
                     latest_version = version
 
-                release_time = datetime.datetime.fromisoformat(artifact["release_time"])
+                release_time = dateutil.parser.isoparse(artifact["release_time"])
 
                 v = MetaVersion(
                     name="authlib-injector",
