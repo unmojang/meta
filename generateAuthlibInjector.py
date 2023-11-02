@@ -19,8 +19,6 @@ ensure_component_dir(AGENT_COMPONENT)
 def main():
     latest_version: Optional[str] = None
 
-    latest_v = None
-
     with open(
         os.path.join(UPSTREAM_DIR, BASE_DIR, "artifacts.json"), "r", encoding="utf-8"
     ) as artifacts_file:
@@ -37,16 +35,16 @@ def main():
                 artifact = json.load(artifact_file)
                 version = artifact["version"]
 
+                latest_build = max(latest_build, build_number)
+                if latest_build == build_number:
+                    latest_version = version
+
                 v = MetaVersion(
                     name="authlib-injector",
                     uid=AGENT_COMPONENT,
                     version=version,
                     release_time=datetime.datetime.fromtimestamp(0),
                 )
-                latest_build = max(latest_build, build_number)
-                if latest_build == build_number:
-                    latest_version = version
-                    latest_v = v
                 v.type = "release"
                 v.additional_agents = [
                     Agent(
@@ -58,13 +56,9 @@ def main():
                         absoluteUrl=artifact["download_url"],
                     )
                 ]
-                # v.write(
-                #     os.path.join(LAUNCHER_DIR, AGENT_COMPONENT, f"{v.version}.json")
-                # )
-
-    latest_v.write(
-        os.path.join(LAUNCHER_DIR, AGENT_COMPONENT, f"{latest_v.version}.json")
-    )
+                v.write(
+                    os.path.join(LAUNCHER_DIR, AGENT_COMPONENT, f"{v.version}.json")
+                )
 
     package = MetaPackage(uid=AGENT_COMPONENT, name="authlib-injector")
     package.recommended = [latest_version]
