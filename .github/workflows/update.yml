@@ -21,8 +21,11 @@ jobs:
       with:
         name: unmojang
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: |
+          ${{ secrets.UPSTREAM_KEY }}
+          ${{ secrets.LAUNCHER_KEY }}
     - run: |
-        install -Dm 600 <(echo "$SSH_KEY") ~/.ssh/id_ed25519
-    - run: |
-        ./clone.sh
-        nix run
+        nix shell -c init
+        nix shell -c update

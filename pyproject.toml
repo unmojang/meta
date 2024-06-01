@@ -31,6 +31,7 @@ requests = "^2.31.0"
 filelock = "^3.13.1"
 packaging = "^24.0"
 pydantic = "^1.10.13"
+python-dateutil = "^2.9.0.post0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

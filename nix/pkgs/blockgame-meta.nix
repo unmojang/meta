@@ -10,6 +10,7 @@
   openssh,
   packaging,
   pydantic_1,
+  python-dateutil,
   python,
   rsync,
 }:
@@ -46,6 +47,7 @@ buildPythonApplication {
     filelock
     packaging
     pydantic_1
+    python-dateutil
   ];
 
   postInstall = ''

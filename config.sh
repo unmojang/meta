@@ -1,8 +1,8 @@
 BASEDIR="$(realpath "$(dirname "$0")")"
 BASEDIR_ESCAPED="$(printf '%q' "$BASEDIR")"
 
-export META_UPSTREAM_REPO=git@github.com:evan-goode/meta-upstream.git
-export META_LAUNCHER_REPO=git@github.com:evan-goode/meta-launcher.git
+export META_UPSTREAM_URL=git@github.com:unmojang/meta-upstream.git
+export META_LAUNCHER_URL=git@github.com:unmojang/meta-launcher.git
 
 export META_UPSTREAM_DIR=upstream
 export META_LAUNCHER_DIR=launcher
