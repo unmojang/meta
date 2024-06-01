@@ -21,16 +21,8 @@ jobs:
       with:
         name: unmojang
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: 'install -m 600 <(echo "$UPSTREAM_KEY") config/upstream.key'
-      env:
-        UPSTREAM_KEY: ${{ secrets.UPSTREAM_KEY }}
-    - run: 'install -m 600 <(echo "$LAUNCHER_KEY") config/launcher.key'
-      env:
-        LAUNCHER_KEY: ${{ secrets.LAUNCHER_KEY }}
     - run: |
-        git config --global user.name "github-actions"
-        git config --global user.email 'github-actions@github.com'
-
+        install -Dm 600 <(echo "$SSH_KEY") ~/.ssh/id_ed25519
+    - run: |
         ./clone.sh
-
-        nix develop --command bash -c 'poetry install && poetry run ./update.sh'
+        nix run

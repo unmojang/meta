@@ -1,14 +1,14 @@
-export UPSTREAM_DIR=upstream
-export UPSTREAM_REPO=git@github.com:unmojang/meta-upstream.git
-export LAUNCHER_DIR=launcher
-export LAUNCHER_REPO=git@github.com:unmojang/meta-launcher.git
-export BRANCH_master=master
-export BRANCH_develop=develop
+BASEDIR="$(realpath "$(dirname "$0")")"
+BASEDIR_ESCAPED="$(printf '%q' "$BASEDIR")"
+
+export META_UPSTREAM_REPO=git@github.com:evan-goode/meta-upstream.git
+export META_LAUNCHER_REPO=git@github.com:evan-goode/meta-launcher.git
+
+export META_UPSTREAM_DIR=upstream
+export META_LAUNCHER_DIR=launcher
+
 export DEPLOY_TO_GIT=true
-export DEPLOY_TO_S3=false
-export DEPLOY_TO_FOLDER=false
-export DEPLOY_FOLDER_master=/app/public/v1
-export DEPLOY_FOLDER_develop=/app/public/dev
-export DEPLOY_FOLDER_USER=http
-export DEPLOY_FOLDER_GROUP=http
-export MODE=master
+export GIT_AUTHOR_NAME="github-actions"
+export GIT_AUTHOR_EMAIL="mail@unmojang.org"
+export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"

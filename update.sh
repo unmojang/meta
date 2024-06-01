@@ -1,22 +1,14 @@
 #!/usr/bin/env bash
-set -e
-
-BASEDIR="$(dirname "$0")"
-cd "${BASEDIR}" || exit 1
-BASEDIR="$(pwd)"
-BASEDIR_ESCAPED="$(printf '%q' "$BASEDIR")"
 
 set -x
 
-source config.sh
-if [ -f config/config_local.sh ]; then
-    source config/config_local.sh
+if [ -f config.sh ]; then
+    source config.sh
 fi
 
-MODE=${MODE:-develop}
-
-BRANCH_var="BRANCH_$MODE"
-BRANCH="${!BRANCH_var}"
+export META_CACHE_DIR=${CACHE_DIRECTORY:-./caches}
+export META_UPSTREAM_DIR=${META_UPSTREAM_DIR:-${STATE_DIRECTORY:-.}/upstream}
+export META_LAUNCHER_DIR=${META_LAUNCHER_DIR:-${STATE_DIRECTORY:-.}/launcher}
 
 function fail_in {
     upstream_git reset --hard HEAD
@@ -29,11 +21,11 @@ function fail_out {
 }
 
 function upstream_git {
-    GIT_SSH_COMMAND="ssh -i ${BASEDIR_ESCAPED}/config/upstream.key" git -C "${BASEDIR}/${UPSTREAM_DIR}" "$@"
+    git -C "${META_UPSTREAM_DIR}" "$@"
 }
 
 function launcher_git {
-    GIT_SSH_COMMAND="ssh -i ${BASEDIR_ESCAPED}/config/launcher.key" git -C "${BASEDIR}/${LAUNCHER_DIR}" "$@"
+    git -C "${META_LAUNCHER_DIR}" "$@"
 }
 
 # make sure we *could* push to our repo
@@ -41,15 +33,14 @@ function launcher_git {
 currentDate=$(date -I)
 
 upstream_git reset --hard HEAD || exit 1
-upstream_git checkout "${BRANCH}" || exit 1
 
-python updateAuthlibInjector.py || fail_in
-python updateMojang.py || fail_in
-python updateForge.py || fail_in
-python updateNeoForge.py || fail_in
-python updateFabric.py || fail_in
-python updateQuilt.py || fail_in
-python updateLiteloader.py || fail_in
+python -m meta.run.update_authlib_injector.py | fail_in
+python -m meta.run.update_mojang || fail_in
+python -m meta.run.update_forge || fail_in
+python -m meta.run.update_neoforge || fail_in
+python -m meta.run.update_fabric || fail_in
+python -m meta.run.update_quilt || fail_in
+python -m meta.run.update_liteloader || fail_in
 
 if [ "${DEPLOY_TO_GIT}" = true ] ; then
     upstream_git add mojang/version_manifest_v2.json mojang/versions/* || fail_in
@@ -66,16 +57,15 @@ if [ "${DEPLOY_TO_GIT}" = true ] ; then
 fi
 
 launcher_git reset --hard HEAD || exit 1
-launcher_git checkout "${BRANCH}" || exit 1
 
-python generateAuthlibInjector.py || fail_out
-python generateMojang.py || fail_out
-python generateForge.py || fail_out
-python generateNeoForge.py || fail_out
-python generateFabric.py || fail_out
-python generateQuilt.py || fail_out
-python generateLiteloader.py || fail_out
-python index.py || fail_out
+python -m meta.run.generate_authlib_injector || fail_out
+python -m meta.run.generate_mojang || fail_out
+python -m meta.run.generate_forge || fail_out
+python -m meta.run.generate_neoforge || fail_out
+python -m meta.run.generate_fabric || fail_out
+python -m meta.run.generate_quilt || fail_out
+python -m meta.run.generate_liteloader || fail_out
+python -m meta.run.index || fail_out
 
 if [ "${DEPLOY_TO_GIT}" = true ] ; then
     launcher_git add index.json org.lwjgl/* org.lwjgl3/* net.minecraft/* || fail_out
@@ -93,10 +83,8 @@ if [ "${DEPLOY_TO_GIT}" = true ] ; then
 fi
 
 if [ "${DEPLOY_TO_FOLDER}" = true ] ; then
-    DEPLOY_FOLDER_var="DEPLOY_FOLDER_$MODE"
-    DEPLOY_FOLDER="${!DEPLOY_FOLDER_var}"
     echo "Deploying to ${DEPLOY_FOLDER}"
-    rsync -rvog --chown="${DEPLOY_FOLDER_USER}:${DEPLOY_FOLDER_GROUP}" --exclude=.git "${BASEDIR}/${LAUNCHER_DIR}/" "${DEPLOY_FOLDER}"
+    rsync -rvog --chown="${DEPLOY_FOLDER_USER}:${DEPLOY_FOLDER_GROUP}" --exclude=.git "${LAUNCHER_DIR}/" "${DEPLOY_FOLDER}"
 fi
 
 exit 0

@@ -4,11 +4,13 @@
 .direnv/
 .pre-commit-config.yaml
 
+result
+
 public/*/
 
 caches/
 !caches/*/.keep
+cache/
 __pycache__
-config_local.sh
 launcher
 upstream
