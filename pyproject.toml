@@ -17,6 +17,7 @@ generateMojang = "meta.run.generate_mojang:main"
 generateNeoForge = "meta.run.generate_neoforge:main"
 generateQuilt = "meta.run.generate_quilt:main"
 generateJava = "meta.run.generate_java:main"
+generateAuthlibInjector = "meta.run.generate_authlib_injector:main"
 updateFabric = "meta.run.update_fabric:main"
 updateForge = "meta.run.update_forge:main"
 updateLiteloader = "meta.run.update_liteloader:main"
@@ -24,6 +25,7 @@ updateMojang = "meta.run.update_mojang:main"
 updateNeoForge = "meta.run.update_neoforge:main"
 updateQuilt = "meta.run.update_quilt:main"
 updateJava = "meta.run.update_java:main"
+updateAuthlibInjector = "meta.run.update_authlib_injector:main"
 index = "meta.run.index:main"
 
 [tool.poetry.dependencies]
@@ -33,6 +35,7 @@ requests = "^2.31.0"
 filelock = "^3.13.1"
 packaging = "^24.0"
 pydantic = "^1.10.13"
+python-dateutil = "^2.9.0.post0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

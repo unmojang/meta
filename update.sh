@@ -34,6 +34,7 @@ currentDate=$(date -I)
 
 upstream_git reset --hard HEAD || exit 1
 
+python -m meta.run.update_authlib_injector || fail_in
 python -m meta.run.update_mojang || fail_in
 python -m meta.run.update_forge || fail_in
 python -m meta.run.update_neoforge || fail_in
@@ -43,6 +44,7 @@ python -m meta.run.update_liteloader || fail_in
 python -m meta.run.update_java || fail_in
 
 if [ "${DEPLOY_TO_GIT}" = true ]; then
+    upstream_git add authlib-injector/artifacts/*.json || fail_in
     upstream_git add mojang/version_manifest_v2.json mojang/java_all.json mojang/versions/* || fail_in
     upstream_git add forge/*.json forge/version_manifests/*.json forge/installer_manifests/*.json forge/files_manifests/*.json forge/installer_info/*.json || fail_in
     upstream_git add neoforge/*.json neoforge/version_manifests/*.json neoforge/installer_manifests/*.json neoforge/files_manifests/*.json neoforge/installer_info/*.json || fail_in
@@ -58,6 +60,7 @@ fi
 
 launcher_git reset --hard HEAD || exit 1
 
+python -m meta.run.generate_authlib_injector || fail_out
 python -m meta.run.generate_mojang || fail_out
 python -m meta.run.generate_forge || fail_out
 python -m meta.run.generate_neoforge || fail_out
@@ -68,6 +71,7 @@ python -m meta.run.generate_java || fail_out
 python -m meta.run.index || fail_out
 
 if [ "${DEPLOY_TO_GIT}" = true ]; then
+    launcher_git add moe.yushi.authlibinjector/* || fail_out
     launcher_git add index.json org.lwjgl/* org.lwjgl3/* net.minecraft/* || fail_out
     launcher_git add net.minecraftforge/* || fail_out
     launcher_git add net.neoforged/* || fail_out

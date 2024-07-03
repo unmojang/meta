@@ -12,6 +12,5 @@ caches/
 !caches/*/.keep
 cache/
 __pycache__
-config.sh
 launcher
 upstream
