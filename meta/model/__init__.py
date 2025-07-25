@@ -284,6 +284,21 @@ class MojangRules(MetaBase):
         return self.__root__[item]
 
 
+class MojangLoggingArtifact(MojangArtifactBase):
+    id: str
+
+
+class MojangLogging(MetaBase):
+    @validator("type")
+    def validate_type(cls, v):
+        assert v in ["log4j2-xml"]
+        return v
+
+    file: MojangLoggingArtifact
+    argument: str
+    type: str
+
+
 class Library(MetaBase):
     extract: Optional[MojangLibraryExtractRules]
     name: Optional[GradleSpecifier]
@@ -329,6 +344,7 @@ class MetaVersion(Versioned):
     additional_tweakers: Optional[List[str]] = Field(alias="+tweakers")
     additional_jvm_args: Optional[List[str]] = Field(alias="+jvmArgs")
     additional_agents: Optional[List[Agent]] = Field(alias="+agents")
+    logging: Optional[MojangLogging]
 
 
 class MetaPackage(Versioned):
