@@ -453,12 +453,7 @@ def main():
                     major = 8
                 else:
                     major = int(mojang_runtime.version.name.partition(".")[0])
-                try:
-                    runtime = mojang_runtime_to_java_runtime(
-                        mojang_runtime, comp, java_os
-                    )
-                except ValueError:
-                    continue
+                runtime = mojang_runtime_to_java_runtime(mojang_runtime, comp, java_os)
                 add_java_runtime(runtime, major)
     # mojang doesn't provide any versions for the following systems so borrow info from adoptium/azul
     for java_os in [
