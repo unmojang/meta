@@ -118,9 +118,6 @@ def get_single_forge_files_manifest(longversion, artifact: str):
 
 def process_neoforge_version(key, entry):
     eprint("Updating NeoForge %s" % key)
-    if entry.mc_version is None:
-        eprint("Skipping %d with invalid MC version" % entry.build)
-        return
 
     version = NeoForgeVersion(entry)
     if version.url() is None:
@@ -144,19 +141,16 @@ def process_neoforge_version(key, entry):
 
     new_sha1 = None
     sha1_file = jar_path + ".sha1"
-    if not os.path.isfile(jar_path):
-        remove_files([profile_path, installer_info_path])
-    else:
-        fileSha1 = get_file_sha1_from_file(jar_path, sha1_file)
-        try:
-            rfile = sess.get(version.url() + ".sha1")
-            rfile.raise_for_status()
-            new_sha1 = rfile.text.strip()
-            if fileSha1 != new_sha1:
-                remove_files([jar_path, profile_path, installer_info_path, sha1_file])
-        except Exception as e:
-            eprint("Failed to check sha1 %s" % version.url())
-            eprint("Error is %s" % e)
+    fileSha1 = get_file_sha1_from_file(jar_path, sha1_file)
+    try:
+        rfile = sess.get(version.url() + ".sha1")
+        rfile.raise_for_status()
+        new_sha1 = rfile.text.strip()
+        if fileSha1 != new_sha1:
+            remove_files([jar_path, profile_path, installer_info_path, sha1_file])
+    except Exception as e:
+        eprint("Failed to check sha1 %s" % version.url())
+        eprint("Error is %s" % e)
 
     installer_refresh_required = not os.path.isfile(profile_path) or not os.path.isfile(
         installer_info_path
@@ -311,8 +305,12 @@ def main():
     print("Grabbing installers and dumping installer profiles...")
     # get the installer jars - if needed - and get the installer profiles out of them
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        for key, entry in new_index.versions.items():
+        futures = [
             executor.submit(process_neoforge_version, key, entry)
+            for key, entry in new_index.versions.items()
+        ]
+        for f in futures:
+            f.result()
 
 
 if __name__ == "__main__":
