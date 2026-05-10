@@ -18,8 +18,8 @@ jobs:
     - uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: |
-          ${{ secrets.UPSTREAM_KEY }}
-          ${{ secrets.LAUNCHER_KEY }}
+          ${{ secrets.UPSTREAM_TEST_KEY }}
+          ${{ secrets.LAUNCHER_TEST_KEY }}
     - run: |
         nix shell -c init
         nix shell -c update
