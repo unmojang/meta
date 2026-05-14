@@ -11,6 +11,7 @@
   packaging,
   pydantic_1,
   python-dateutil,
+  pygithub,
   python,
   rsync,
 }:
@@ -48,6 +49,7 @@ buildPythonApplication {
     packaging
     pydantic_1
     python-dateutil
+    pygithub
   ];
 
   postInstall = ''
