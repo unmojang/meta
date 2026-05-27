@@ -20,9 +20,11 @@ ensure_component_dir(AGENT_COMPONENT)
 
 def main():
     releases_dir = os.path.join(UPSTREAM_DIR, RELEASES_DIR)
+    output_dir = os.path.join(LAUNCHER_DIR, AGENT_COMPONENT)
 
     latest_version: Optional[str] = None
     latest_time = None
+    generated_versions = set()
 
     for filename in os.listdir(releases_dir):
         if not filename.endswith(".json"):
@@ -55,8 +57,22 @@ def main():
                 absoluteUrl=release["download_url"],
             )
         ]
-        v.write(os.path.join(LAUNCHER_DIR, AGENT_COMPONENT, f"{version}.json"))
+        v.write(os.path.join(output_dir, f"{version}.json"))
+        generated_versions.add(version)
         print(f"Generated Loki {version}")
+
+    if os.path.isdir(output_dir):
+        for filename in os.listdir(output_dir):
+            if not filename.endswith(".json") or filename in (
+                "package.json",
+                "index.json",
+            ):
+                continue
+            version = filename[: -len(".json")]
+            if version in generated_versions:
+                continue
+            os.remove(os.path.join(output_dir, filename))
+            print(f"Removed generated Loki {version}: release no longer available")
 
     package = MetaPackage(uid=AGENT_COMPONENT, name="Loki")
     package.recommended = [latest_version] if latest_version else []
