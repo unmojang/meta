@@ -37,6 +37,9 @@ def main():
     valid_versions = set()
 
     for release in repo.get_releases():
+        if release.prerelease:
+            continue
+
         tag = release.tag_name
         version = tag.lstrip("v")
         published_at = release.published_at.isoformat()
