@@ -3786,7 +3786,8 @@
   {
     "_comment": "Add linux-arm64 support for LWJGL 3.4.1",
     "match": [
-      "org.lwjgl:lwjgl:3.4.1"
+      "org.lwjgl:lwjgl:3.4.1",
+      "org.lwjgl:lwjgl:3.4.1:unsafe"
     ],
     "additionalLibraries": [
       {
@@ -3994,7 +3995,8 @@
   {
     "_comment": "Add linux-arm32 support for LWJGL 3.4.1",
     "match": [
-      "org.lwjgl:lwjgl:3.4.1"
+      "org.lwjgl:lwjgl:3.4.1",
+      "org.lwjgl:lwjgl:3.4.1:unsafe"
     ],
     "additionalLibraries": [
       {
@@ -4358,7 +4360,8 @@
   {
     "_comment": "Add linux-riscv64 support for LWJGL 3.4.1",
     "match": [
-      "org.lwjgl:lwjgl:3.4.1"
+      "org.lwjgl:lwjgl:3.4.1",
+      "org.lwjgl:lwjgl:3.4.1:unsafe"
     ],
     "additionalLibraries": [
       {
@@ -4506,5 +4509,53 @@
         ]
       }
     ]
+  },
+  {
+    "_comment": "Only allow osx-arm64 for existing webrtc-java",
+    "match": [
+      "dev.onvoid.webrtc:webrtc-java:0.14.0:macos-aarch64"
+    ],
+    "override": {
+      "rules": [
+        {
+          "action": "allow",
+          "os": {
+            "name": "osx-arm64"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "_comment": "Only allow linux-arm64 for existing webrtc-java",
+    "match": [
+      "dev.onvoid.webrtc:webrtc-java:0.14.0:linux-aarch64"
+    ],
+    "override": {
+      "rules": [
+        {
+          "action": "allow",
+          "os": {
+            "name": "linux-arm64"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "_comment": "Only allow linux-arm32 for existing webrtc-java",
+    "match": [
+      "dev.onvoid.webrtc:webrtc-java:0.14.0:linux-aarch32"
+    ],
+    "override": {
+      "rules": [
+        {
+          "action": "allow",
+          "os": {
+            "name": "linux-arm32"
+          }
+        }
+      ]
+    }
   }
 ]
