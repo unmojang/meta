@@ -33,7 +33,13 @@ def main():
     gh = Github(auth=auth, retry=GithubRetry())
     repo = gh.get_repo(REPO_SLUG)
 
+    releases_dir = os.path.join(UPSTREAM_DIR, RELEASES_DIR)
+    valid_versions = set()
+
     for release in repo.get_releases():
+        if release.prerelease:
+            continue
+
         tag = release.tag_name
         version = tag.lstrip("v")
         published_at = release.published_at.isoformat()
@@ -49,8 +55,9 @@ def main():
             print(f"Skipping {version}: no asset named {jar_name}")
             continue
 
-        out_path = os.path.join(UPSTREAM_DIR, RELEASES_DIR, f"{version}.json")
+        out_path = os.path.join(releases_dir, f"{version}.json")
         if os.path.exists(out_path):
+            valid_versions.add(version)
             print(f"Skipping {version}: already cached")
             continue
 
@@ -72,7 +79,17 @@ def main():
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(release_info, f, sort_keys=True, indent=4)
 
+        valid_versions.add(version)
         print(f"Stored Loki {version}")
+
+    for filename in os.listdir(releases_dir):
+        if not filename.endswith(".json"):
+            continue
+        version = filename[: -len(".json")]
+        if version in valid_versions:
+            continue
+        os.remove(os.path.join(releases_dir, filename))
+        print(f"Removed cached Loki {version}: release no longer available")
 
 
 if __name__ == "__main__":
