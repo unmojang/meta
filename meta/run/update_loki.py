@@ -36,12 +36,26 @@ def main():
     releases_dir = os.path.join(UPSTREAM_DIR, RELEASES_DIR)
     valid_versions = set()
 
-    for release in repo.get_releases():
-        if release.prerelease:
-            continue
+    releases = list(repo.get_releases())
+    if not releases:
+        raise Exception(f"{REPO_SLUG} reported no releases")
 
+    for release in releases:
         tag = release.tag_name
         version = tag.lstrip("v")
+        out_path = os.path.join(releases_dir, f"{version}.json")
+        cached = os.path.exists(out_path)
+
+        if release.prerelease:
+            if cached:
+                valid_versions.add(version)
+            continue
+
+        if cached:
+            valid_versions.add(version)
+            print(f"Skipping {version}: already cached")
+            continue
+
         published_at = release.published_at.isoformat()
 
         jar_name = f"Loki-{version}.jar"
@@ -53,12 +67,6 @@ def main():
 
         if not download_url:
             print(f"Skipping {version}: no asset named {jar_name}")
-            continue
-
-        out_path = os.path.join(releases_dir, f"{version}.json")
-        if os.path.exists(out_path):
-            valid_versions.add(version)
-            print(f"Skipping {version}: already cached")
             continue
 
         print(f"Downloading and verifying Loki {version}...")
@@ -82,13 +90,18 @@ def main():
         valid_versions.add(version)
         print(f"Stored Loki {version}")
 
-    for filename in os.listdir(releases_dir):
-        if not filename.endswith(".json"):
-            continue
-        version = filename[: -len(".json")]
-        if version in valid_versions:
-            continue
-        os.remove(os.path.join(releases_dir, filename))
+    cached_versions = {
+        filename[: -len(".json")]
+        for filename in os.listdir(releases_dir)
+        if filename.endswith(".json")
+    }
+    stale_versions = cached_versions - valid_versions
+
+    if cached_versions and stale_versions == cached_versions:
+        raise Exception("Every cached Loki release is missing upstream")
+
+    for version in sorted(stale_versions):
+        os.remove(os.path.join(releases_dir, f"{version}.json"))
         print(f"Removed cached Loki {version}: release no longer available")
 
 

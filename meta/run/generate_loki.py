@@ -61,6 +61,9 @@ def main():
         generated_versions.add(version)
         print(f"Generated Loki {version}")
 
+    if not generated_versions:
+        raise Exception(f"No Loki releases found in {releases_dir}")
+
     if os.path.isdir(output_dir):
         for filename in os.listdir(output_dir):
             if not filename.endswith(".json") or filename in (
