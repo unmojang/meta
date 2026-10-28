@@ -40,6 +40,7 @@ pydantic = "^1.10.13"
 python-dateutil = "^2.9.0.post0"
 PyGithub = "^2.0"
 typing-extensions = ">=4.12"
+urllib3 = "^2.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
